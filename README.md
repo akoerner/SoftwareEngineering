@@ -7,7 +7,7 @@ MEMBERS
 (Add your name to show that you can use version control,  commit the changes and push back to github)
 
 Andrew Koerner
-
+Joe Bizal
 
 
 
