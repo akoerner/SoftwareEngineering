@@ -8,6 +8,8 @@ MEMBERS
 
 Andrew Koerner
 
+Aidan Fleischer
+
 Joe Bizal
 
 
