@@ -1,6 +1,9 @@
 package src.accessors;
 
 import java.util.ArrayList;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import common.Account;
 import common.Transaction;
@@ -17,10 +20,24 @@ class StorageAccessor
 		return null;
 	}
 	
-	public void StoreAccount()
-	{}
+	public void StoreAccount(Account acct)
+	{
+		try {
+		// Make sure file works
+		File acctFile = new File(acct.getUsername() + acct.getID());
+		if (!acctFile.exists()) acctFile.createNewFile();
+		// Make FileWriter and write to it
+		FileWriter writer = new FileWriter(acctFile);
+		writer.append(acct.getUsername() + "," + acct.getID());
+		// Flush and close FileWriter
+		writer.flush();
+		writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
-	public Account RetrieveAccount(int ID)
+	public Account RetrieveAccount(String Username)
 	{
 		return null;
 	}
