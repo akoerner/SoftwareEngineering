@@ -1,6 +1,8 @@
 package src.accessors;
 
 import java.util.ArrayList;
+
+import common.Account;
 import common.Transaction;
 
 class StorageAccessor
@@ -10,7 +12,15 @@ class StorageAccessor
 	{}
 	
 	// Retrieve all transactions from disk
-	public ArrayList<Transaction> RetrieveAllTransactions()
+	public ArrayList<Transaction> RetrieveAccountTransactions(int AccountID)
+	{
+		return null;
+	}
+	
+	public void StoreAccount()
+	{}
+	
+	public Account RetrieveAccount(int ID)
 	{
 		return null;
 	}
