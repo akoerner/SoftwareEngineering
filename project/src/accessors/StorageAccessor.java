@@ -1,4 +1,4 @@
-package src.accessors;
+package accessors;
 
 import java.util.ArrayList;
 import java.io.File;
