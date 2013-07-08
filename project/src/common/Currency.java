@@ -1,4 +1,4 @@
-package src.common;
+package common;
 
 public enum Currency 
 {
