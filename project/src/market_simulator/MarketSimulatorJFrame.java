@@ -21,6 +21,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
+import managers.AccountManager;
+
 import common.Account;
 import common.lib.GUITools.GUITools;
 import common.lib.GUITools.JFrameDragger;
@@ -48,11 +50,10 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 	private double excRate;
 	public JTable transactionTable;
 	
-	
+	Account account;
 	
 	public MarketSimulatorJFrame(){
 		
-		this.marketSimulator = new MarketSimulator();
 		
 		this.rootPanel = new JPanel();
 		
@@ -118,6 +119,25 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 		
 		usdTrade = new JTextField("0.00");
 		euroTrade = new JTextField("0.00");
+		
+		usdTrade.addCaretListener(new CaretListener() {
+
+	        @Override
+	        public void caretUpdate(CaretEvent e) {
+	           usd.setText(AccountManager.getAccountUSDBalanceByAccountID(account.getId()) + "");
+	           euro.setText(AccountManager.getAccountEUROBalanceByAccountID(account.getId()) + "");
+	        }
+	    });
+		
+		euroTrade.addCaretListener(new CaretListener() {
+	        @Override
+	        public void caretUpdate(CaretEvent e) {
+	           usd.setText(AccountManager.getAccountUSDBalanceByAccountID(account.getId()) + "");
+	           euro.setText(AccountManager.getAccountEUROBalanceByAccountID(account.getId()) + "");
+	        }
+	    });
+		
+		
 		fee  = new JTextField(".06%");
 		fee.setEditable(false);
 		buyButton = new JButton("Buy");

@@ -8,10 +8,10 @@ import com.db4o.ObjectSet;
 
 import common.Transaction;
 
-class StorageAccessor
+public class StorageAccessor
 {
 	// Write transaction to disk
-	public void StoreTransaction(Transaction t)
+	public static void StoreTransaction(Transaction t)
 	{
 		ObjectContainer db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), "Transactions.dat");
 		try {
@@ -23,7 +23,7 @@ class StorageAccessor
 	
 	// Retrieve all transactions associated with a given account ID from disk
 	// Returns null if no transactions exist
-	protected ArrayList<Transaction> RetrieveAccountTransactions(int AccountID)
+	public static ArrayList<Transaction> RetrieveAccountTransactions(int AccountID)
 	{
 		ObjectContainer db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), "Transactions.dat");
 		try {

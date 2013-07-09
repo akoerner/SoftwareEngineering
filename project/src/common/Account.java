@@ -16,6 +16,10 @@ public class Account
 		this.userName = userName;
 	}
 
+	public Account() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getId() {
 		return id;
 	}

@@ -27,4 +27,11 @@ public class AccountManager{
 		return 0.0;
 		
 	}
+	
+	public static Account getAccountById(String id){
+		//Account account = new Account();
+		
+		//account.setTransactions(StorageAccessor.get);
+		return null;
+	}
 }
