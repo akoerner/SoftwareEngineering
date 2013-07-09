@@ -23,6 +23,7 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
 import managers.AccountManager;
+import managers.MarketManager;
 
 import common.Account;
 import common.lib.GUITools.GUITools;
@@ -35,7 +36,7 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 	private JButton sellButton;
 	
 	private JLabel pair, marketFee, amountToTrade, perTrade;
-	private JTextField euro, usd, usdTrade, euroTrade, fee, accountIDJTextField;
+	private JTextField euro, usd, buyTrade, sellTrade, fee, accountIDJTextField;
 	private JPanel rootPanel, topPanel, bottomPanel;
 	private JButton fetchAccountInfoButton;
 	
@@ -120,10 +121,10 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 		euro.setEditable(false);
 		usd.setEditable(false);
 		
-		usdTrade = new JTextField("0.00");
-		euroTrade = new JTextField("0.00");
+		buyTrade = new JTextField("0.00");
+		sellTrade = new JTextField("0.00");
 		
-		usdTrade.addCaretListener(new CaretListener() {
+		buyTrade.addCaretListener(new CaretListener() {
 
 	        @Override
 	        public void caretUpdate(CaretEvent e) {
@@ -132,7 +133,7 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 	        }
 	    });
 		
-		euroTrade.addCaretListener(new CaretListener() {
+		sellTrade.addCaretListener(new CaretListener() {
 	        @Override
 	        public void caretUpdate(CaretEvent e) {
 	           usd.setText(AccountManager.getAccountUSDBalanceByAccountID(account.getId()) + "");
@@ -150,11 +151,17 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 			 
             public void actionPerformed(ActionEvent e)
             {
+            	double rate =  MarketManager.getCurrentExchangRateUSDToEuro();
             	int n = JOptionPane.showConfirmDialog(
                         null,
-                        "",
-                        "",
+                        "Are you sure you want to buy " + buyTrade.getText() + " at a rate of " + rate + "?",
+                        "Sell Order Confirmation",
                         JOptionPane.YES_NO_OPTION);
+            	
+				if (n == JOptionPane.NO_OPTION) return;
+				if (n == JOptionPane.YES_OPTION) {
+					MarketSimulator.submitOrder(account, MarketManager.BUY_ORDER, new Double(buyTrade.getText()));
+				}
             }
         });
 		
@@ -162,11 +169,17 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 			
 			public void actionPerformed (ActionEvent e)
 			{
+				double rate = MarketManager.getCurrentExchangRateEUROToUSD();
 				int n = JOptionPane.showConfirmDialog(
                         null,
-                        "",
-                        "",
+                        "Are you sure you want to sell " + sellTrade.getText() + " at a rate of " + rate + "?",
+                        "Sell Order Confirmation",
                         JOptionPane.YES_NO_OPTION);
+				
+				if (n == JOptionPane.NO_OPTION) return;
+				if (n == JOptionPane.YES_OPTION) {
+					MarketSimulator.submitOrder(account, MarketManager.SELL_ORDER, new Double(sellTrade.getText()));
+				}
 			}
 		});
 		
@@ -201,12 +214,12 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 		this.topPanel.add(new JLabel("Amount to Trade"));		
 		this.topPanel.add(new JLabel("Current Exchange Rate(USD/EUR)"));
 		this.topPanel.add(new JLabel("Amount to Trade"));
-		this.topPanel.add(usdTrade);
+		this.topPanel.add(buyTrade);
 		this.exchangeRate = new JTextField(".00");
 		this.exchangeRate.setEditable(false);
 		this.exchangeRate.setText(marketSimulator.getCurrentExchangRateUSDToEuro() + "");
 		this.topPanel.add(exchangeRate);
-		this.topPanel.add(euroTrade);
+		this.topPanel.add(sellTrade);
 		this.topPanel.add(buyButton);
 		this.fetchAccountInfoButton = new JButton("Fetch Market Account");
 		

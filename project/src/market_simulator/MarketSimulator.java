@@ -28,30 +28,16 @@ public class MarketSimulator {
 		return MarketManager.getCurrentExchangRateEUROToUSD();
 	}
 	
-	public static void submitOrder(Account account, String type, double amount){
+	public static void submitOrder(Account account, String type, String currency, double amount){
 		
 		
 		double fee = .06 * amount;
 		
-		Transaction transaciton = new Transaction();
 		
-		if(type.equals(MarketManager.INIT_ORDER)){
-			transaciton.setAccountID(account.getId());
-			transaciton.setUsd(10000.00);
-			transaciton.setType(MarketManager.INIT_ORDER);
-			return;
-		}
 		
-		if(type.equals(MarketManager.BUY_ORDER)){
-			
-			return;
-		}
 		
-		if(type.equals(MarketManager.SELL_ORDER)){
-			
-			
-			return;
-		}
+		
+		Transaction transaction = new Transaction();
 	}
 
 }
