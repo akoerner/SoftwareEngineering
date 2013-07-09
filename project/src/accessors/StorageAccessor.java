@@ -23,11 +23,12 @@ public class StorageAccessor
 	
 	// Retrieve all transactions associated with a given account ID from disk
 	// Returns null if no transactions exist
-	public static ArrayList<Transaction> RetrieveAccountTransactions(int AccountID)
+	public static ArrayList<Transaction> RetrieveAccountTransactions(String AccountID)
 	{
 		ObjectContainer db = Db4oEmbedded.openFile(Db4oEmbedded.newConfiguration(), "Transactions.dat");
 		try {
-			ObjectSet<Transaction> objs = db.query(Transaction.class);
+			Transaction ex = new Transaction(AccountID);
+			ObjectSet<Transaction> objs = db.queryByExample(ex);
 			ArrayList<Transaction> al = new ArrayList<Transaction>();
 			al.addAll(objs);
 			return al;
