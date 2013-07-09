@@ -29,14 +29,15 @@ public class MarketSimulator {
 		return MarketManager.getCurrentExchangRateEUROToUSD();
 	}
 	
-	public static void submitOrder(String ID, String type, double amount){
+	public static void submitOrder(String ID, String type, double usdAmount, double euroAmount){
 		
 		
-		double fee = .06 * amount;
+		double usdFee = .06 * usdAmount;
+		double euroFee = .06 * usdAmount;
 		
 		Transaction transaciton = new Transaction();
 		transaciton.setAccountID(ID);
-		transaciton.setUsd(amount);
+		transaciton.setUsd(usdAmount);
 		
 		if(type.equals(MarketManager.INIT_ORDER)) {
 			transaciton.setType(MarketManager.INIT_ORDER);
@@ -46,12 +47,16 @@ public class MarketSimulator {
 		
 		if(type.equals(MarketManager.BUY_ORDER)){
 			transaciton.setType(MarketManager.BUY_ORDER);
+			transaciton.setUsd(usdAmount);
+			transaciton.setEur((usdAmount-usdFee)*MarketManager.getCurrentExchangRateUSDToEuro());
 			StorageAccessor.StoreTransaction(transaciton);
 			return;
 		}
 		
 		if(type.equals(MarketManager.SELL_ORDER)){
 			transaciton.setType(MarketManager.SELL_ORDER);
+			transaciton.setUsd(usdAmount);
+			transaciton.setEur((euroAmount-euroFee)*MarketManager.getCurrentExchangRateEUROToUSD());
 			StorageAccessor.StoreTransaction(transaciton);
 			return;
 		}

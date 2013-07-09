@@ -161,7 +161,8 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 	            	
 					if (q == JOptionPane.NO_OPTION) return;
 					if (q == JOptionPane.YES_OPTION) {
-						MarketSimulator.submitOrder(accountIDJTextField.getText(), MarketManager.INIT_ORDER, 5000);
+						MarketSimulator.submitOrder(accountIDJTextField.getText(), MarketManager.INIT_ORDER, 5000, 0);
+						usd.setText("5000");
 					}
 				}
             	
@@ -189,8 +190,10 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
             	
 				if (n == JOptionPane.NO_OPTION) return;
 				if (n == JOptionPane.YES_OPTION) {
-					MarketSimulator.submitOrder(accountIDJTextField.getText(), MarketManager.BUY_ORDER, new Double(buyTrade.getText()));
+					MarketSimulator.submitOrder(accountIDJTextField.getText(), MarketManager.BUY_ORDER, Double.parseDouble(buyTrade.getText()), 0);
 				}
+				euro.setText(AccountManager.getAccountEUROBalanceByAccountID(accountIDJTextField.getText())+"");
+				usd.setText(AccountManager.getAccountUSDBalanceByAccountID(accountIDJTextField.getText())+"");
             }
         });
 		
@@ -224,7 +227,8 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 	            	
 					if (q == JOptionPane.NO_OPTION) return;
 					if (q == JOptionPane.YES_OPTION) {
-						MarketSimulator.submitOrder(accountIDJTextField.getText(), MarketManager.INIT_ORDER, 5000);
+						MarketSimulator.submitOrder(accountIDJTextField.getText(), MarketManager.INIT_ORDER, 5000, 0);
+						usd.setText("5000");
 					}
 				}
 				
@@ -236,7 +240,9 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 				
 				if (n == JOptionPane.NO_OPTION) return;
 				if (n == JOptionPane.YES_OPTION) {
-					MarketSimulator.submitOrder(accountIDJTextField.getText(), MarketManager.SELL_ORDER, new Double(sellTrade.getText()));
+					MarketSimulator.submitOrder(accountIDJTextField.getText(), MarketManager.SELL_ORDER, 0, Double.parseDouble(sellTrade.getText()));
+					euro.setText(AccountManager.getAccountEUROBalanceByAccountID(accountIDJTextField.getText())+"");
+					usd.setText(AccountManager.getAccountUSDBalanceByAccountID(accountIDJTextField.getText())+"");
 				}
 			}
 		});
