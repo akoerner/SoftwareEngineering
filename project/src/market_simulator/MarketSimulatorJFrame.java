@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -54,6 +55,8 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 	
 	public MarketSimulatorJFrame(){
 		
+		this.account = new Account();
+		this.account.setId("");
 		
 		this.rootPanel = new JPanel();
 		
@@ -140,8 +143,32 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 		
 		fee  = new JTextField(".06%");
 		fee.setEditable(false);
-		buyButton = new JButton("Buy");
-		sellButton = new JButton("Sell");
+		buyButton = new JButton("Buy Euros");
+		sellButton = new JButton("Sell Euros");
+		
+		this.buyButton.addActionListener(new ActionListener() {
+			 
+            public void actionPerformed(ActionEvent e)
+            {
+            	int n = JOptionPane.showConfirmDialog(
+                        null,
+                        "",
+                        "",
+                        JOptionPane.YES_NO_OPTION);
+            }
+        });
+		
+		this.sellButton.addActionListener(new ActionListener () {
+			
+			public void actionPerformed (ActionEvent e)
+			{
+				int n = JOptionPane.showConfirmDialog(
+                        null,
+                        "",
+                        "",
+                        JOptionPane.YES_NO_OPTION);
+			}
+		});
 		
 		//this.add(new JLabel("Pair"));
 		//this.add(usd);
