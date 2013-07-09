@@ -9,4 +9,6 @@ public class Transaction
 	private Currency sold;				// currency paid in transaction
 	private Currency purchased;			// currency purchased
 	private double unitPrice;			// price paid for 1 unit of currency purchased denominated in currency sold
+
+	// Need to implement ToString()
 }
