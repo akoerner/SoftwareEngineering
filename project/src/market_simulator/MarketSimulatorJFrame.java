@@ -151,16 +151,45 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 			 
             public void actionPerformed(ActionEvent e)
             {
+				if (!(AccountManager.getTransactionsByAccountID(accountIDJTextField.getText()).size() > 0))
+				{
+					int q = JOptionPane.showConfirmDialog(
+	                        null,
+	                        "No account found for ID "+accountIDJTextField.getText()+". Would you like to create a new account?",
+	                        "Create Account Panel",
+	                        JOptionPane.YES_NO_OPTION);
+	            	
+					if (q == JOptionPane.NO_OPTION) return;
+					if (q == JOptionPane.YES_OPTION) {
+						MarketSimulator.submitOrder(accountIDJTextField.getText(), MarketManager.INIT_ORDER, 5000);
+					}
+				}
+            	
             	double rate =  MarketManager.getCurrentExchangRateUSDToEuro();
+            	System.out.println(rate);
+            	System.out.println(Double.parseDouble(buyTrade.getText()));
+            	double fee = MarketManager.getCurrentExchangRateUSDToEuro() * Double.parseDouble(buyTrade.getText()) * .06;
+            	double total = MarketManager.getCurrentExchangRateUSDToEuro() * Double.parseDouble(buyTrade.getText()) - fee;
+            	
+            	StringBuilder message = new StringBuilder();
+            	message.append("Are you sure you want to buy $");
+            	message.append(buyTrade.getText());
+            	message.append(" worth of Euros at a rate of ");
+            	message.append(rate);
+            	message.append("?\nFee: $");
+            	message.append(fee);
+            	message.append("\nTotal: EURO ");
+            	message.append(total);
+            	
             	int n = JOptionPane.showConfirmDialog(
                         null,
-                        "Are you sure you want to buy " + buyTrade.getText() + " at a rate of " + rate + "?",
+                        message.toString(),
                         "Sell Order Confirmation",
                         JOptionPane.YES_NO_OPTION);
             	
 				if (n == JOptionPane.NO_OPTION) return;
 				if (n == JOptionPane.YES_OPTION) {
-					MarketSimulator.submitOrder(account, MarketManager.BUY_ORDER, new Double(buyTrade.getText()));
+					MarketSimulator.submitOrder(accountIDJTextField.getText(), MarketManager.BUY_ORDER, new Double(buyTrade.getText()));
 				}
             }
         });
@@ -169,16 +198,45 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 			
 			public void actionPerformed (ActionEvent e)
 			{
-				double rate = MarketManager.getCurrentExchangRateEUROToUSD();
+				double rate =  MarketManager.getCurrentExchangRateEUROToUSD();
+            	System.out.println(rate);
+            	System.out.println(Double.parseDouble(sellTrade.getText()));
+            	double fee = MarketManager.getCurrentExchangRateEUROToUSD() * Double.parseDouble(sellTrade.getText()) * .06;
+            	double total = MarketManager.getCurrentExchangRateEUROToUSD() * Double.parseDouble(sellTrade.getText()) - fee;
+				
+            	StringBuilder message = new StringBuilder();
+            	message.append("Are you sure you want to sell EURO");
+            	message.append(sellTrade.getText());
+            	message.append(" worth of Dollars at a rate of ");
+            	message.append(rate);
+            	message.append("?\nFee: EURO");
+            	message.append(fee);
+            	message.append("\nTotal: $ ");
+            	message.append(total);
+            	
+				if (!(AccountManager.getTransactionsByAccountID(accountIDJTextField.getText()).size() > 0))
+				{
+					int q = JOptionPane.showConfirmDialog(
+	                        null,
+	                        "No account found for ID "+accountIDJTextField.getText()+". Would you like to create a new account?",
+	                        "Create Account Panel",
+	                        JOptionPane.YES_NO_OPTION);
+	            	
+					if (q == JOptionPane.NO_OPTION) return;
+					if (q == JOptionPane.YES_OPTION) {
+						MarketSimulator.submitOrder(accountIDJTextField.getText(), MarketManager.INIT_ORDER, 5000);
+					}
+				}
+				
 				int n = JOptionPane.showConfirmDialog(
                         null,
-                        "Are you sure you want to sell " + sellTrade.getText() + " at a rate of " + rate + "?",
+                        message.toString(),
                         "Sell Order Confirmation",
                         JOptionPane.YES_NO_OPTION);
 				
 				if (n == JOptionPane.NO_OPTION) return;
 				if (n == JOptionPane.YES_OPTION) {
-					MarketSimulator.submitOrder(account, MarketManager.SELL_ORDER, new Double(sellTrade.getText()));
+					MarketSimulator.submitOrder(accountIDJTextField.getText(), MarketManager.SELL_ORDER, new Double(sellTrade.getText()));
 				}
 			}
 		});
@@ -220,22 +278,13 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 		this.exchangeRate.setText(marketSimulator.getCurrentExchangRateUSDToEuro() + "");
 		this.topPanel.add(exchangeRate);
 		this.topPanel.add(sellTrade);
-		this.topPanel.add(buyButton);
-		this.fetchAccountInfoButton = new JButton("Fetch Market Account");
-		
-		this.fetchAccountInfoButton.addActionListener(new ActionListener() {
- 
-            public void actionPerformed(ActionEvent e)
-            {
-                
-            }
-        });      
+		this.topPanel.add(buyButton);    
 		
 		this.mhb = new MarketHeartbeat(exchangeRate, excRate, this);
 		 new Thread(this.mhb).start();
 		//this.mhb.start();
 		
-		this.topPanel.add(this.fetchAccountInfoButton);
+		this.topPanel.add(new JLabel(""));
 		this.topPanel.add(sellButton);
 		
 		

@@ -4,6 +4,8 @@ import java.util.Random;
 
 import javax.swing.JTextField;
 
+import accessors.StorageAccessor;
+
 import managers.MarketManager;
 
 import common.Account;
@@ -28,28 +30,30 @@ public class MarketSimulator {
 		return MarketManager.getCurrentExchangRateEUROToUSD();
 	}
 	
-	public static void submitOrder(Account account, String type, double amount){
+	public static void submitOrder(String ID, String type, double amount){
 		
 		
 		double fee = .06 * amount;
 		
 		Transaction transaciton = new Transaction();
+		transaciton.setAccountID(ID);
+		transaciton.setUsd(amount);
 		
-		if(type.equals(MarketManager.INIT_ORDER)){
-			transaciton.setAccountID(account.getId());
-			transaciton.setUsd(10000.00);
+		if(type.equals(MarketManager.INIT_ORDER)) {
 			transaciton.setType(MarketManager.INIT_ORDER);
+			StorageAccessor.StoreTransaction(transaciton);
 			return;
 		}
 		
 		if(type.equals(MarketManager.BUY_ORDER)){
-			
+			transaciton.setType(MarketManager.BUY_ORDER);
+			StorageAccessor.StoreTransaction(transaciton);
 			return;
 		}
 		
 		if(type.equals(MarketManager.SELL_ORDER)){
-			
-			
+			transaciton.setType(MarketManager.SELL_ORDER);
+			StorageAccessor.StoreTransaction(transaciton);
 			return;
 		}
 	}
