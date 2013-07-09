@@ -7,6 +7,9 @@ import com.google.gson.Gson;
 
 public class MarketAccessor {
 
+	
+	private MarketAccessor(){}
+	
 	static class Result
     {
 		private String lhs;
