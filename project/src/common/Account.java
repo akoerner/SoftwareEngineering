@@ -1,20 +1,60 @@
 package common;
 
+import java.util.ArrayList;
+
 public class Account 
 {
-	private String username;	// username associated with user account
-	private int accountID;		// ID associated with user account
+	private String id;		// ID associated with user account
+	private ArrayList<Transaction> transactions;
+	private double usdBalance;
+	private double euroBalance;
+	private String userName;
 	
-	public Account(String Username, String ID) {
-		this.username = Username;
-		this.accountID = new Integer(ID);
+
+	public Account(String userName, String id) {
+		this.id = id;
+		this.userName = userName;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getId() {
+		return id;
 	}
 
-	public int getID() {
-		return accountID;
+	public void setId(String id) {
+		this.id = id;
 	}
+
+	public ArrayList<Transaction> getTransactions() {
+		return transactions;
+	}
+
+	public void setTransactions(ArrayList<Transaction> transactions) {
+		this.transactions = transactions;
+	}
+
+	public double getUsdBalance() {
+		return usdBalance;
+	}
+
+	public void setUsdBalance(double usdBalance) {
+		this.usdBalance = usdBalance;
+	}
+
+	public double getEuroBalance() {
+		return euroBalance;
+	}
+
+	public void setEuroBalance(double euroBalance) {
+		this.euroBalance = euroBalance;
+	}
+
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 }

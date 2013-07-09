@@ -43,11 +43,11 @@ class StorageAccessor
 	{
 		try {
 		// Make sure file works
-		File acctFile = new File(acct.getUsername()+".dat");
+		File acctFile = new File(acct.getUserName()+".dat");
 		if (!acctFile.exists()) acctFile.createNewFile();
 		// Make FileWriter and write to it
 		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(acctFile)));
-		out.append(new Integer(acct.getID()).toString());
+		out.append(new Integer(acct.getId()).toString());
 		// Flush and close FileWriter
 		out.flush();
 		out.close();

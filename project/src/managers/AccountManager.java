@@ -1,9 +1,6 @@
 package managers;
 
-public class AccountManager {
-
-	private AccountManager(){}
-
+public class AccountManager{
 
 	
 	

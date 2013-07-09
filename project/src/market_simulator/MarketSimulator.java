@@ -1,5 +1,7 @@
 package market_simulator;
 
+import java.util.Random;
+
 import javax.swing.JTextField;
 
 import common.Account;
@@ -14,18 +16,19 @@ public class MarketSimulator {
 		return account;
 	}
 	
-	public Account getAccount(String id) {
-		return account;
-	}
-
-	public String getCurrentExchangRateUSDToEuro() {
-		// TODO Auto-generated method stub
+	public static Account getAccount(String id) {
 		return null;
 	}
 
-	public String getCurrentExchangRateEUROToUSD() {
+	public static double getCurrentExchangRateUSDToEuro() {
 		// TODO Auto-generated method stub
-		return null;
+		Random r=new Random();
+		return r.nextDouble();
+	}
+
+	public static double getCurrentExchangRateEUROToUSD() {
+		// TODO Auto-generated method stub
+		return 0.0;
 	}
 
 }
