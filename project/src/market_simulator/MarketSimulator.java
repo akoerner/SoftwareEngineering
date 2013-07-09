@@ -21,7 +21,6 @@ public class MarketSimulator {
 
 	public static double getCurrentExchangRateUSDToEuro() {
 		// TODO Auto-generated method stub
-		Random r=new Random();
 		return MarketManager.getCurrentExchangRateUSDToEuro();
 	}
 
