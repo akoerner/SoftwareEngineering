@@ -1,5 +1,6 @@
 package market_simulator;
 
+import java.util.Date;
 import java.util.Random;
 
 import javax.swing.JTextField;
@@ -33,31 +34,33 @@ public class MarketSimulator {
 		
 		
 		double usdFee = .06 * usdAmount;
-		double euroFee = .06 * usdAmount;
+		double euroFee = .06 * euroAmount;
 		
-		Transaction transaciton = new Transaction();
-		transaciton.setAccountID(ID);
-		transaciton.setUsd(usdAmount);
+		Transaction transaction = new Transaction();
+		transaction.setAccountID(ID);
+		transaction.setUsd(usdAmount);
+		transaction.setDate(new Date());
+		
 		
 		if(type.equals(MarketManager.INIT_ORDER)) {
-			transaciton.setType(MarketManager.INIT_ORDER);
-			StorageAccessor.StoreTransaction(transaciton);
+			transaction.setType(MarketManager.INIT_ORDER);
+			StorageAccessor.StoreTransaction(transaction);
 			return;
 		}
 		
 		if(type.equals(MarketManager.BUY_ORDER)){
-			transaciton.setType(MarketManager.BUY_ORDER);
-			transaciton.setUsd(usdAmount);
-			transaciton.setEur((usdAmount-usdFee)*MarketManager.getCurrentExchangRateUSDToEuro());
-			StorageAccessor.StoreTransaction(transaciton);
+			transaction.setType(MarketManager.BUY_ORDER);
+			transaction.setUsd(usdAmount);
+			transaction.setEur((usdAmount-usdFee)*MarketManager.getCurrentExchangRateUSDToEuro());
+			StorageAccessor.StoreTransaction(transaction);
 			return;
 		}
 		
 		if(type.equals(MarketManager.SELL_ORDER)){
-			transaciton.setType(MarketManager.SELL_ORDER);
-			transaciton.setUsd(usdAmount);
-			transaciton.setEur((euroAmount-euroFee)*MarketManager.getCurrentExchangRateEUROToUSD());
-			StorageAccessor.StoreTransaction(transaciton);
+			transaction.setType(MarketManager.SELL_ORDER);
+			transaction.setUsd((euroAmount-euroFee)*MarketManager.getCurrentExchangRateEUROToUSD());
+			transaction.setEur(euroAmount);
+			StorageAccessor.StoreTransaction(transaction);
 			return;
 		}
 	}

@@ -22,11 +22,11 @@ public class AccountManager{
 		ArrayList<Transaction> transactions = getTransactionsByAccountID(accountId);
 		
 		for (Transaction transaction : transactions) {
-		    if(transaction.getType() == MarketManager.BUY_ORDER) usdTotal-=transaction.getUsd();
-		    if(transaction.getType() == MarketManager.SELL_ORDER) usdTotal+=transaction.getUsd();
-		    if(transaction.getType() == MarketManager.INIT_ORDER) usdTotal+=transaction.getUsd();
+		    if(transaction.getType().equals(MarketManager.BUY_ORDER)) usdTotal-=transaction.getUsd();
+		    if(transaction.getType().equals(MarketManager.SELL_ORDER)) usdTotal+=transaction.getUsd();
+		    if(transaction.getType().equals(MarketManager.INIT_ORDER)) usdTotal+=transaction.getUsd();
 		}
-		return 0.0;
+		return usdTotal;
 	}
 	
 	public static double getAccountEUROBalanceByAccountID(String accountId){
@@ -36,11 +36,11 @@ public class AccountManager{
 
 		ArrayList<Transaction> transactions = getTransactionsByAccountID(accountId);
 		for (Transaction transaction : transactions) {
-		   if(transaction.getType() == MarketManager.BUY_ORDER) eurTotal+=transaction.getEur();
-		    if(transaction.getType() == MarketManager.SELL_ORDER) eurTotal-=transaction.getEur();
-		    if(transaction.getType() == MarketManager.INIT_ORDER) eurTotal+=transaction.getEur();
+		   if(transaction.getType().equals(MarketManager.BUY_ORDER)) eurTotal+=transaction.getEur();
+		   if(transaction.getType().equals(MarketManager.SELL_ORDER)) eurTotal-=transaction.getEur();
+		   if(transaction.getType().equals(MarketManager.INIT_ORDER)) eurTotal+=transaction.getEur();
 		}
-		return 0.0;
+		return eurTotal;
 		
 	}
 	

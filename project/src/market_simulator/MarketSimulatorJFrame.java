@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -26,6 +28,7 @@ import managers.AccountManager;
 import managers.MarketManager;
 
 import common.Account;
+import common.Transaction;
 import common.lib.GUITools.GUITools;
 import common.lib.GUITools.JFrameDragger;
 
@@ -53,9 +56,10 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 	public JTable transactionTable;
 	
 	Account account;
+	private String[] columnNames = {"Type", "Date", "Euro Total", "USD Total"};
+	private Object[][] data;
 	
 	public MarketSimulatorJFrame(){
-		
 		this.account = new Account();
 		this.account.setId("");
 		
@@ -96,9 +100,12 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 		
 		//for(int i = 0; i < 100; i++)transactionPanel.add(new JLabel("i="+i));
 		
-		this.transactionTable = new JTable();
-		this.transactionTable.setName("Account Transaction History");
+		this.data = new String[2][4];
 		
+		
+		this.transactionTable = new JTable(this.data, this.columnNames);
+		this.transactionTable.setName("Account Transaction History");
+		this.transactionTable.setEnabled(false);
 		
 		
 		
@@ -109,6 +116,7 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 		this.transactionPane.getViewport().add(this.transactionTable);
 		
 		this.setName("Simple FOREX Simulator");
+		this.setTitle("Simple FOREX Simulator");
 		
 		//this.setLayout(new FlowLayout());
 		
@@ -121,23 +129,23 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 		euro.setEditable(false);
 		usd.setEditable(false);
 		
-		buyTrade = new JTextField("0.00");
-		sellTrade = new JTextField("0.00");
+		buyTrade = new JTextField("");
+		sellTrade = new JTextField("");
 		
 		buyTrade.addCaretListener(new CaretListener() {
 
 	        @Override
 	        public void caretUpdate(CaretEvent e) {
-	           usd.setText(AccountManager.getAccountUSDBalanceByAccountID(account.getId()) + "");
-	           euro.setText(AccountManager.getAccountEUROBalanceByAccountID(account.getId()) + "");
+	          // usd.setText(AccountManager.getAccountUSDBalanceByAccountID(account.getId()) + "");
+	          // euro.setText(AccountManager.getAccountEUROBalanceByAccountID(account.getId()) + "");
 	        }
 	    });
 		
 		sellTrade.addCaretListener(new CaretListener() {
 	        @Override
 	        public void caretUpdate(CaretEvent e) {
-	           usd.setText(AccountManager.getAccountUSDBalanceByAccountID(account.getId()) + "");
-	           euro.setText(AccountManager.getAccountEUROBalanceByAccountID(account.getId()) + "");
+	          // usd.setText(AccountManager.getAccountUSDBalanceByAccountID(account.getId()) + "");
+	          // euro.setText(AccountManager.getAccountEUROBalanceByAccountID(account.getId()) + "");
 	        }
 	    });
 		
@@ -151,6 +159,9 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 			 
             public void actionPerformed(ActionEvent e)
             {
+            	
+            
+            	
 				if (!(AccountManager.getTransactionsByAccountID(accountIDJTextField.getText()).size() > 0))
 				{
 					int q = JOptionPane.showConfirmDialog(
@@ -164,6 +175,11 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 						MarketSimulator.submitOrder(accountIDJTextField.getText(), MarketManager.INIT_ORDER, 5000, 0);
 						usd.setText("5000");
 					}
+				}
+				
+				if(AccountManager.getAccountUSDBalanceByAccountID(accountIDJTextField.getText()) < Double.parseDouble(buyTrade.getText())){
+					JOptionPane.showMessageDialog(new JFrame(),"Insufficient Funds", "Account Error", JOptionPane.ERROR_MESSAGE);
+					return;
 				}
             	
             	double rate =  MarketManager.getCurrentExchangRateUSDToEuro();
@@ -191,6 +207,10 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 				if (n == JOptionPane.NO_OPTION) return;
 				if (n == JOptionPane.YES_OPTION) {
 					MarketSimulator.submitOrder(accountIDJTextField.getText(), MarketManager.BUY_ORDER, Double.parseDouble(buyTrade.getText()), 0);
+					transactionTable = new JTable(dataAg(AccountManager.getTransactionsByAccountID(accountIDJTextField.getText())), columnNames);
+					transactionTable.setName("Account Transaction History");
+					transactionTable.setEnabled(false);
+					transactionTable.repaint();
 				}
 				euro.setText(AccountManager.getAccountEUROBalanceByAccountID(accountIDJTextField.getText())+"");
 				usd.setText(AccountManager.getAccountUSDBalanceByAccountID(accountIDJTextField.getText())+"");
@@ -201,6 +221,12 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 			
 			public void actionPerformed (ActionEvent e)
 			{
+				
+				if(AccountManager.getAccountEUROBalanceByAccountID(accountIDJTextField.getText()) < Double.parseDouble(sellTrade.getText())){
+					JOptionPane.showMessageDialog(new JFrame(),"Insufficient Funds", "Account Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
 				double rate =  MarketManager.getCurrentExchangRateEUROToUSD();
             	System.out.println(rate);
             	System.out.println(Double.parseDouble(sellTrade.getText()));
@@ -243,6 +269,8 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 					MarketSimulator.submitOrder(accountIDJTextField.getText(), MarketManager.SELL_ORDER, 0, Double.parseDouble(sellTrade.getText()));
 					euro.setText(AccountManager.getAccountEUROBalanceByAccountID(accountIDJTextField.getText())+"");
 					usd.setText(AccountManager.getAccountUSDBalanceByAccountID(accountIDJTextField.getText())+"");
+					transactionTable = new JTable(dataAg(AccountManager.getTransactionsByAccountID(accountIDJTextField.getText())), columnNames);
+					transactionTable.repaint();
 				}
 			}
 		});
@@ -262,12 +290,23 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 		this.accountIDJTextField.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e){
-            	accountIDJTextField.setText("");
+            	//accountIDJTextField.setText("");
             }
         });
 		
 		
-		
+		this.accountIDJTextField.addCaretListener(new CaretListener() {
+
+	        @Override
+	        public void caretUpdate(CaretEvent e) {
+
+				if ((AccountManager.getTransactionsByAccountID(accountIDJTextField.getText()).size() > 0)){
+					if(accountIDJTextField.getText().equals("Account ID"))
+					euro.setText(AccountManager.getAccountEUROBalanceByAccountID(accountIDJTextField.getText())+"");
+					usd.setText(AccountManager.getAccountUSDBalanceByAccountID(accountIDJTextField.getText())+"");
+				}
+	        }
+	    });
 		this.topPanel.add(this.accountIDJTextField);
 		this.topPanel.add(new JLabel("USD Account Balance"));
 		this.topPanel.add(new JLabel("Market Fee"));
@@ -315,6 +354,22 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 		
 	
 		
+	}
+	
+	private String[][] dataAg(ArrayList<Transaction> transactions){
+		String[][] data = new String[transactions.size()][4];
+		
+		for(int i = 0; i < transactions.size(); i++){
+			
+			data[i][0] = transactions.get(i).getType();
+			data[i][1] = transactions.get(i).getDate().toString();	
+			data[i][2] = transactions.get(i).getEur() + "";	
+			data[i][3] = transactions.get(i).getUsd() + "";	
+			
+		}
+		
+		
+		return data;
 	}
 	
 	public class MarketHeartbeat  implements Runnable {
