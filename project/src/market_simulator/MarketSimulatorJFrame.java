@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.table.DefaultTableModel;
 
 import managers.AccountManager;
 import managers.MarketManager;
@@ -58,6 +59,8 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 	Account account;
 	private String[] columnNames = {"Type", "Date", "Euro Total", "USD Total"};
 	private Object[][] data;
+	
+	private DefaultTableModel model;
 	
 	public MarketSimulatorJFrame(){
 		this.account = new Account();
@@ -103,11 +106,13 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 		this.data = new String[2][4];
 		
 		
-		this.transactionTable = new JTable(this.data, this.columnNames);
+		this.transactionTable = new JTable();
 		this.transactionTable.setName("Account Transaction History");
-		this.transactionTable.setEnabled(false);
+		//this.transactionTable.setEnabled(false);
 		
-		
+		model = new DefaultTableModel(this.data, this.columnNames);
+		this.transactionTable.setModel(model);
+		model.fireTableDataChanged();
 		
 		
 		
@@ -195,7 +200,7 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
             	message.append(rate);
             	message.append("?\nFee: $");
             	message.append(fee);
-            	message.append("\nTotal: EURO ");
+            	message.append("\nTotal: € ");
             	message.append(total);
             	
             	int n = JOptionPane.showConfirmDialog(
@@ -207,10 +212,11 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 				if (n == JOptionPane.NO_OPTION) return;
 				if (n == JOptionPane.YES_OPTION) {
 					MarketSimulator.submitOrder(accountIDJTextField.getText(), MarketManager.BUY_ORDER, Double.parseDouble(buyTrade.getText()), 0);
-					transactionTable = new JTable(dataAg(AccountManager.getTransactionsByAccountID(accountIDJTextField.getText())), columnNames);
-					transactionTable.setName("Account Transaction History");
-					transactionTable.setEnabled(false);
-					transactionTable.repaint();
+					data = dataAg(AccountManager.getTransactionsByAccountID(accountIDJTextField.getText()));
+				
+					model = new DefaultTableModel(data, columnNames);
+					transactionTable.setModel(model);
+					model.fireTableDataChanged();
 				}
 				euro.setText(AccountManager.getAccountEUROBalanceByAccountID(accountIDJTextField.getText())+"");
 				usd.setText(AccountManager.getAccountUSDBalanceByAccountID(accountIDJTextField.getText())+"");
@@ -238,7 +244,7 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
             	message.append(sellTrade.getText());
             	message.append(" worth of Dollars at a rate of ");
             	message.append(rate);
-            	message.append("?\nFee: EURO");
+            	message.append("?\nFee: €");
             	message.append(fee);
             	message.append("\nTotal: $ ");
             	message.append(total);
@@ -269,8 +275,10 @@ public class MarketSimulatorJFrame extends JFrame implements ActionListener{
 					MarketSimulator.submitOrder(accountIDJTextField.getText(), MarketManager.SELL_ORDER, 0, Double.parseDouble(sellTrade.getText()));
 					euro.setText(AccountManager.getAccountEUROBalanceByAccountID(accountIDJTextField.getText())+"");
 					usd.setText(AccountManager.getAccountUSDBalanceByAccountID(accountIDJTextField.getText())+"");
-					transactionTable = new JTable(dataAg(AccountManager.getTransactionsByAccountID(accountIDJTextField.getText())), columnNames);
-					transactionTable.repaint();
+					data = dataAg(AccountManager.getTransactionsByAccountID(accountIDJTextField.getText()));
+					model = new DefaultTableModel(data, columnNames);
+					transactionTable.setModel(model);
+					model.fireTableDataChanged();
 				}
 			}
 		});
